@@ -6,11 +6,10 @@ import {
   InputBaseProps,
   Paper,
 } from "@mui/material";
-import { ComponentPropsWithRef, useState } from "react";
+import { useState } from "react";
 
 type Props = {
   onSubmit(searchTerm: string): void;
-  onFocus?(): void;
   inputProps: InputBaseProps;
 };
 const Searchbar = (props: Props) => {
@@ -38,7 +37,7 @@ const Searchbar = (props: Props) => {
         {...props.inputProps}
       />
       <Divider sx={{ height: 28, mx: 0.5 }} orientation="vertical" />
-      <IconButton>
+      <IconButton type="submit">
         <SearchOutlined />
       </IconButton>
     </Paper>

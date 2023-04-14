@@ -25,7 +25,9 @@ const Home: NextPage = () => {
                 search: searchTerm,
               },
             });
-            setRecentSearches([searchTerm, ...recentSearches]);
+            if (!recentSearches.includes(searchTerm)) {
+              setRecentSearches([searchTerm, ...recentSearches]);
+            }
           }}
           inputProps={{
             onFocus: () => setOpen(true),
