@@ -9,13 +9,16 @@ import {
 import { useState } from "react";
 
 type Props = {
+  // the outside components only needs to know if the searchbar form has been submitted
   onSubmit(searchTerm: string): void;
+  // add inputProps so that we can listen to onFocus / onBlur events if needed
   inputProps: InputBaseProps;
 };
 const Searchbar = (props: Props) => {
   const [searchTerm, setSearchTerm] = useState("");
 
   return (
+    // We use the Paper component since it already contains the style that we want.
     <Paper
       component="form"
       elevation={3}

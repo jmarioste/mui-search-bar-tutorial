@@ -11,25 +11,30 @@ import {
   ListItemText,
 } from "@mui/material";
 import { useRecentSearches } from "../hooks/useRecentSearches";
-import { AccessTime, Close, Delete } from "@mui/icons-material";
+import { AccessTime, Close } from "@mui/icons-material";
 import { useOnClickOutside } from "usehooks-ts";
 import { useRef } from "react";
 
+// we add an onClose prop in addition to the PopperProps
 type Props = {
   onClose(): void;
 } & PopperProps;
+
 const RecentSearches = ({ open, anchorEl, onClose }: Props) => {
   const { recentSearches, setRecentSearches } = useRecentSearches();
   const paperRef = useRef<HTMLDivElement>(null);
 
   const el = anchorEl as HTMLElement;
+  // remove item when x button is click for an item
   const removeItem = (searchTerm: string) => {
     setRecentSearches(recentSearches.filter((item) => item !== searchTerm));
   };
+  //listen to clickOutside events using this hook from usehooks-ts
   useOnClickOutside(paperRef, onClose);
   if (!anchorEl) return null;
   return (
     <Popper anchorEl={anchorEl} open={open} disablePortal>
+      {/* set the width the same as the anchorElement */}
       <Paper sx={{ width: el.clientWidth }} ref={paperRef}>
         <MenuList>
           {!recentSearches.length ? (
@@ -40,7 +45,7 @@ const RecentSearches = ({ open, anchorEl, onClose }: Props) => {
             <>
               {recentSearches.map((searchTerm, i) => {
                 return (
-                  <MenuItem key={i} sx={{ display: "flex" }}>
+                  <MenuItem key={i}>
                     <ListItemIcon>
                       <AccessTime />
                     </ListItemIcon>

@@ -10,21 +10,24 @@ import { useRef, useState } from "react";
 const Home: NextPage = () => {
   const router = useRouter();
   const { recentSearches, setRecentSearches } = useRecentSearches();
+  // track state for showing RecentSearches
   const [open, setOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
+  const anchorEl = useRef<HTMLDivElement>(null);
   return (
     <Box maxWidth={"sm"} margin="auto">
       <Typography textAlign="center" my={2}>
         MUI <code>{`<SearchBar/>`}</code> Tutorial
       </Typography>
-      <Box ref={ref}>
+      <Box ref={anchorEl}>
         <Searchbar
           onSubmit={(searchTerm: string) => {
+            // when the user submits the form, we only modify the router query parameters
             router.push({
               query: {
                 search: searchTerm,
               },
             });
+            // also add to push recent searches after every search
             if (!recentSearches.includes(searchTerm)) {
               setRecentSearches([searchTerm, ...recentSearches]);
             }
@@ -35,7 +38,7 @@ const Home: NextPage = () => {
         />
         <RecentSearches
           open={open}
-          anchorEl={ref.current}
+          anchorEl={anchorEl.current}
           onClose={() => {
             setOpen(false);
           }}
