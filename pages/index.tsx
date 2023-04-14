@@ -11,13 +11,13 @@ const Home: NextPage = () => {
   const router = useRouter();
   const { recentSearches, setRecentSearches } = useRecentSearches();
   const [open, setOpen] = useState(false);
-  const ref = useRef<HTMLFormElement>(null);
+  const ref = useRef<HTMLDivElement>(null);
   return (
     <Box maxWidth={"sm"} margin="auto">
       <Typography textAlign="center" my={2}>
         MUI <code>{`<SearchBar/>`}</code> Tutorial
       </Typography>
-      <Box my={10}>
+      <Box ref={ref}>
         <Searchbar
           onSubmit={(searchTerm: string) => {
             router.push({
@@ -29,16 +29,15 @@ const Home: NextPage = () => {
           }}
           inputProps={{
             onFocus: () => setOpen(true),
-            onBlur: () => setOpen(false),
           }}
         />
         <RecentSearches
           open={open}
+          anchorEl={ref.current}
           onClose={() => {
             setOpen(false);
           }}
         />
-        <code>{router.asPath}</code>
       </Box>
     </Box>
   );

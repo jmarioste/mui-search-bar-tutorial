@@ -6,33 +6,56 @@ import {
   Popper,
   Fade,
   Paper,
+  IconButton,
+  ListItemIcon,
+  ListItemText,
 } from "@mui/material";
 import { useRecentSearches } from "../hooks/useRecentSearches";
+import { AccessTime, Close, Delete } from "@mui/icons-material";
+import { useOnClickOutside } from "usehooks-ts";
+import { useRef } from "react";
 
 type Props = {
-  open: boolean;
   onClose(): void;
-};
-
-const RecentSearches = ({ open, onClose }: Props) => {
+} & PopperProps;
+const RecentSearches = ({ open, anchorEl, onClose }: Props) => {
   const { recentSearches, setRecentSearches } = useRecentSearches();
-  if (!open) return null;
+  const paperRef = useRef<HTMLDivElement>(null);
+
+  const el = anchorEl as HTMLElement;
+  const removeItem = (searchTerm: string) => {
+    setRecentSearches(recentSearches.filter((item) => item !== searchTerm));
+  };
+  useOnClickOutside(paperRef, onClose);
+  if (!anchorEl) return null;
   return (
-    <Paper>
-      <MenuList>
-        {!recentSearches.length ? (
-          <>
-            <MenuItem disabled>You have no recent searches...</MenuItem>
-          </>
-        ) : (
-          <>
-            {recentSearches.map((searchTerm, i) => {
-              return <MenuItem key={i}>{searchTerm}</MenuItem>;
-            })}
-          </>
-        )}
-      </MenuList>
-    </Paper>
+    <Popper anchorEl={anchorEl} open={open} disablePortal>
+      <Paper sx={{ width: el.clientWidth }} ref={paperRef}>
+        <MenuList>
+          {!recentSearches.length ? (
+            <>
+              <MenuItem disabled>You have no recent searches...</MenuItem>
+            </>
+          ) : (
+            <>
+              {recentSearches.map((searchTerm, i) => {
+                return (
+                  <MenuItem key={i} sx={{ display: "flex" }}>
+                    <ListItemIcon>
+                      <AccessTime />
+                    </ListItemIcon>
+                    <ListItemText>{searchTerm}</ListItemText>
+                    <IconButton onClick={() => removeItem(searchTerm)}>
+                      <Close />
+                    </IconButton>
+                  </MenuItem>
+                );
+              })}
+            </>
+          )}
+        </MenuList>
+      </Paper>
+    </Popper>
   );
 };
 export default RecentSearches;
